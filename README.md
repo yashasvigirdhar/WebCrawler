@@ -114,16 +114,14 @@ void crawl();
 
 This is the only way external consumers can interact with the system.
 
-### Performance
-
-### Quality
-
-Unit tests are the first line of defense against. So the aim is to cover as much code as
-possible with unit tests.
-
 ### Usage
 
 After we run the program, it asks the user to enter the starting base url on the command line.
+
+### Performance
+TBU
+### Quality
+TBU
 
 ### Future work
 TBU
