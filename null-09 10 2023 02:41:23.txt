@@ -1,6 +1,0 @@
-Crawling started, let's go!
-
-
-*******Stats********
-  Total no of pages scraped=0 
-  Time taken (in seconds)=0 
