@@ -25,15 +25,13 @@ public final class CrawlCentre {
 
     private final Logger logger = Logger.getLogger(getClass().getSimpleName());
 
-    private URL baseUrl;
     private final WorkCoordinator workCoordinator;
     private final ThreadPoolExecutor postProcessingExecutor;
     private final Lazy<Set<PostProcessor>> postProcessors;
-    private final AtomicInteger crawledPages;
     private Instant startTime;
 
     public CrawlCentre() {
-        this.crawledPages = new AtomicInteger(0);
+        new AtomicInteger(0);
         this.workCoordinator = new WorkCoordinator(new WorkCallbackImpl());
         this.postProcessingExecutor = new ThreadPoolExecutor(1, 1, 10L, TimeUnit.MILLISECONDS,
                 new LinkedBlockingQueue<>());
@@ -47,7 +45,6 @@ public final class CrawlCentre {
      * <p>The process happens asynchronously and this method returns shortly after scheduling it.</p>
      */
     public void start(URL baseUrl) {
-        this.baseUrl = baseUrl;
         this.startTime = Instant.now();
         workCoordinator.crawlDomain(baseUrl);
         postProcessingExecutor.submit(() -> {

@@ -5,7 +5,6 @@ import yashasvig.crawler.centre.CrawlCentre;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 
 /**
  * Entry point into the crawler system.
@@ -33,15 +32,5 @@ public final class Crawler {
      */
     public void crawl(String baseUrl) throws URISyntaxException, MalformedURLException {
         crawlCentre.start(new URI(baseUrl).toURL());
-    }
-
-    /**
-     * Stops the existing crawling process going on, if any.
-     *
-     * <p>Note that this would be at a best effort basis and there's no time guarantee by which the process would
-     * definitely stop.</p>
-     */
-    public void stopCrawling() {
-
     }
 }

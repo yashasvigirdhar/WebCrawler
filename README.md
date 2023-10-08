@@ -1,8 +1,10 @@
 ## Problem Statement
 
-Design a web crawler. Given a starting url, the program should crawl all the pages on that specific domain.
+Design a web crawler. 
 
-## Design
+Given a starting url, the program should crawl all the pages on that specific domain.
+
+## Considerations
 
 Some important considerations while designing this system:
 
@@ -11,15 +13,13 @@ Some important considerations while designing this system:
     - **Latency**: There could be a high volume of web pages even if we apply the domain restriction.
       But crawling one web page is independent of crawling another one. This naturally calls for
       a solution which can crawl multiple web pages in parallel.
-    - **Memory**:
-    - **Network**
 
+<!-- TODO: Add memory and network --> 
 
 - **Correctness**
 
     - Pages could link to each other and there could be a cycle between them. Our program
       should make sure we handle these cases and crawl a web page only once.
-    - Handling links with different mime types (pdf etc).
 
 
 - **Extensibility**
@@ -123,11 +123,12 @@ possible with unit tests.
 
 ### Usage
 
+After we run the program, it asks the user to enter the starting base url on the command line.
+
 ### Future work
-
+TBU
 #### Robustness
-
-#### Allow crawling multiple domains 
+TBU
 
 [1]: https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ThreadPoolExecutor.html
 
