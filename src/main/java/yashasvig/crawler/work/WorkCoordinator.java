@@ -1,8 +1,9 @@
 package yashasvig.crawler.work;
 
 import org.jsoup.Connection;
-import org.jsoup.Jsoup;
 import yashasvig.crawler.models.Page;
+import yashasvig.crawler.work.di.DaggerWorkComponent;
+import yashasvig.crawler.work.di.WorkComponent;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -10,21 +11,13 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Provides API to schedule the crawling of a new {@link Page}. This class also provides way to be invoked when the
  * crawling finishes through {@link WorkCallback}.
  */
 public final class WorkCoordinator {
-
-    /**
-     * Max no of concurrent workers that the factory can create. Each concurrent worker corresponds to a new thread
-     * being spawn in the system.
-     */
-    private static final int NUM_OF_WORKERS = 10;
 
     private final Connection connection;
     private UrlFilter filter;
@@ -42,10 +35,9 @@ public final class WorkCoordinator {
         this.pageProcessingFinishCallback = new WorkCallbackDelegate(callback);
         this.workTracker = new WorkTracker();
         this.visitedUrls = Collections.newSetFromMap(new ConcurrentHashMap<>());
-        this.connection = Jsoup.newSession().ignoreContentType(true).timeout(5000);
-        workerPool = new ThreadPoolExecutor(NUM_OF_WORKERS, NUM_OF_WORKERS, 2L, TimeUnit.SECONDS,
-                new LinkedBlockingQueue<>());
-        workerPool.allowCoreThreadTimeOut(true);
+        WorkComponent workComponent = DaggerWorkComponent.create();
+        this.workerPool = workComponent.workerPool();
+        this.connection = workComponent.jsoupConnection();
         awaitingFinishThread = new AwaitingFinishThread();
     }
 
@@ -71,13 +63,6 @@ public final class WorkCoordinator {
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    /**
-     * Returns the total no of pages processed by the system.
-     */
-    public long getTotalPageProcessed() {
-        return workerPool.getCompletedTaskCount();
     }
 
     private void scheduleUrlIfRequired(URI url) {

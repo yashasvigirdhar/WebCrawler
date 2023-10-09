@@ -6,7 +6,7 @@ import yashasvig.crawler.postprocessing.PostProcessor;
 
 import java.util.Set;
 
-@Component(modules = PostProducersDaggerModule.class)
+@Component(modules = PostProducersModule.class)
 public interface PostProcessingComponent {
 
     Lazy<Set<PostProcessor>> postProcessors();

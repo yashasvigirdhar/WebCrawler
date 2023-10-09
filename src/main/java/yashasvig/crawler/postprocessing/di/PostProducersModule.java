@@ -8,7 +8,7 @@ import yashasvig.crawler.postprocessing.print.FilePrinter;
 import yashasvig.crawler.postprocessing.print.UserConsolePrinter;
 
 @Module
-public class PostProducersDaggerModule {
+public class PostProducersModule {
 
     @Provides
     @IntoSet
