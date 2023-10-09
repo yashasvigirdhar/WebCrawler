@@ -1,6 +1,7 @@
 package yashasvig.crawler.api;
 
 import yashasvig.crawler.centre.CrawlCentre;
+import yashasvig.crawler.global.Constants;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -30,7 +31,8 @@ public final class Crawler {
      *
      * <p>The process happens asynchronously and this method returns shortly after scheduling it.</p>
      *
-     * <p>Note that only HTTP or HTTPS scheme is supported by the crawler. </p>
+     * <p>Note that it throws {@link IllegalArgumentException} if the passed url scheme is not supported. See
+     * {@link Constants#SUPPORTED_SCHEMES} to see what all schemes are supported</p>
      *
      * @param baseUrl the base url to start crawling
      * @throws IllegalArgumentException if the passed url is not supported

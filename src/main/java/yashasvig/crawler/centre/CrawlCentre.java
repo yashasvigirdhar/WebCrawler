@@ -1,6 +1,7 @@
 package yashasvig.crawler.centre;
 
 import dagger.Lazy;
+import yashasvig.crawler.global.Constants;
 import yashasvig.crawler.models.Page;
 import yashasvig.crawler.postprocessing.PostProcessor;
 import yashasvig.crawler.postprocessing.di.DaggerPostProcessingComponent;
@@ -46,6 +47,9 @@ public final class CrawlCentre {
      * Starts the crawling process.
      *
      * <p>The process happens asynchronously and this method returns shortly after scheduling it.</p>
+     *
+     * <p>Note that it throws {@link IllegalArgumentException} if the passed url scheme is not supported. See
+     * {@link Constants#SUPPORTED_SCHEMES} to see what all schemes are supported</p>
      */
     public void start(URI baseUrl) {
         if (Arrays.stream(SUPPORTED_SCHEMES).noneMatch(s -> s.equals(baseUrl.getScheme()))) {
