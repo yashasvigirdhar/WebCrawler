@@ -7,11 +7,14 @@ import yashasvig.crawler.models.Page;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static yashasvig.crawler.global.Constants.SUPPORTED_SCHEMES;
 
 /**
  * Represents a single instance of {@link Runnable} in the system which is responsible for scraping a single
@@ -27,8 +30,6 @@ import java.util.logging.Logger;
 final class Worker implements Runnable {
 
     private final Logger logger = Logger.getLogger(getClass().getSimpleName());
-    private final static String HTTP = "http";
-    private final static String HTTPS = "https";
 
     private final Connection session;
     private final UrlFilter filter;
@@ -77,7 +78,7 @@ final class Worker implements Runnable {
         }
 
         List<String> childLinks = document.select("a[href]").stream().map(element -> element.attr("abs:href"))
-                .filter(link -> link.startsWith(HTTP) || link.startsWith(HTTPS)).toList();
+                .filter(link -> Arrays.stream(SUPPORTED_SCHEMES).anyMatch(link::startsWith)).toList();
 
         Set<URI> childURIs = new HashSet<>();
         for (String link : childLinks) {

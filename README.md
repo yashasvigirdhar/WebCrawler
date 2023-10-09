@@ -10,9 +10,13 @@ Some important considerations while designing this system:
 
 - **Performance**
 
-    - **Latency**: There could be a high volume of web pages even if we apply the domain restriction.
-      But crawling one web page is independent of crawling another one. This naturally calls for
-      a solution which can crawl multiple web pages in parallel.
+    - **Latency**:
+        - There could be a high volume of web pages even if we apply the domain restriction.
+          But crawling one web page is independent of crawling another one. This naturally calls for
+          a solution which can crawl multiple web pages in parallel.
+        - For URLs which can not be crawled, in other words whose content type is not `text/html` such as `pdf`
+          or `audio` files, we don't need to download the complete file to determine that. We can just use `HTTP HEAD`
+          method here.
 
 <!-- TODO: Add memory and network --> 
 
@@ -129,8 +133,9 @@ We currently support crawling only 1 domain at a time. The program exits when th
 
 Ab absolute url is expected as input, such as `https://monzo.com`.
 
-> Note that the crawler only supports `HTTP` and `HTTPS` schemes for the starting URL. On top that, we further crawl links only with
-these two schemes.
+> Note that the crawler only supports `HTTP` and `HTTPS` schemes for the starting URL. On top that, we further crawl
+> links only with
+> these two schemes.
 
 ### Output
 

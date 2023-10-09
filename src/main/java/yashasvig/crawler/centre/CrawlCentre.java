@@ -19,13 +19,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static yashasvig.crawler.global.Constants.SUPPORTED_SCHEMES;
+
 /**
  * Schedules the crawling of all the web pages and handles the post-processing once a page has been crawled.
  */
 public final class CrawlCentre {
 
     private final Logger logger = Logger.getLogger(getClass().getSimpleName());
-    private static final String[] SUPPORTED_SCHEMES = {"HTTP", "HTTPS"};
 
     private final WorkCoordinator workCoordinator;
     private final ThreadPoolExecutor postProcessingExecutor;
@@ -47,7 +48,7 @@ public final class CrawlCentre {
      * <p>The process happens asynchronously and this method returns shortly after scheduling it.</p>
      */
     public void start(URI baseUrl) {
-        if (Arrays.stream(SUPPORTED_SCHEMES).noneMatch(s -> s.equalsIgnoreCase(baseUrl.getScheme()))) {
+        if (Arrays.stream(SUPPORTED_SCHEMES).noneMatch(s -> s.equals(baseUrl.getScheme()))) {
             throw new IllegalArgumentException(
                     String.format("Only %s schemes are supported currently", Arrays.toString(SUPPORTED_SCHEMES)));
         }
