@@ -11,7 +11,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -62,9 +61,10 @@ final class Worker implements Runnable {
         try {
             Connection connection = session.url(pageUrl);
             Connection.Response response = connection.method(Connection.Method.HEAD).execute();
-            if (!Objects.equals(response.contentType(), "text/html")) {
+            String contentType = response.contentType();
+            if (contentType != null && !contentType.contains("text/html")) {
                 finishCallback.onFinishedPageSuccessfully(new Page(pageUrl, new HashSet<>()));
-                //System.out.printf("Skip content type %s with %s\n", response.contentType(), response.url());
+                System.out.printf("Skip downloading %s\n", response.url());
                 return;
             }
 
