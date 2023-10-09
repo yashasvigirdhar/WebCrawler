@@ -43,11 +43,15 @@ public final class Page {
         writer.increaseIndent();
         writer.println("Page: " + url.toExternalForm());
         writer.increaseIndent();
-        writer.println("Urls on this page:");
-        writer.increaseIndent();
-        childUrls.forEach(url -> writer.println(url.toString()));
-        writer.println();
-        writer.decreaseIndent();
+        if (childUrls.isEmpty()) {
+            writer.println("No urls present on this page.");
+        } else {
+            writer.println("Urls on this page:");
+            writer.increaseIndent();
+            childUrls.forEach(url -> writer.println(url.toString()));
+            writer.println();
+            writer.decreaseIndent();
+        }
         writer.decreaseIndent();
         writer.decreaseIndent();
     }
