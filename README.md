@@ -1,6 +1,6 @@
 ## Problem Statement
 
-Design a web crawler. 
+Design a web crawler.
 
 Given a starting url, the program should crawl all the pages on that specific domain.
 
@@ -120,15 +120,30 @@ This is the only way external consumers can interact with the system.
 
 After we run the program, it asks the user to enter the starting base url on the command line.
 
-### Performance
-TBU
+Once a valid URL is
+entered, the program starts the crawling while printing some useful information on the console while it's going on.
+
+We currently support crawling only 1 domain at a time. The program exits when the crawling finishes.
+
+### Output
+
+The output of each crawling process is stored in a file with naming structure as follows:
+`<base-url-authority>-<timestamp-at-start>.txt`. The file is created in project's root directory currently.
+
+For example, when crawling monzo sometime past midnight hours, the
+output would be something like: `monzo.com-09 10 2023 02:41:40.txt`.
+
 ### Quality
+
 TBU
 
 ### Future work
+
 TBU
-#### Robustness
-TBU
+
+* Robustness
+* Performance benchmarking
+* Unit testing
 
 [1]: https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ThreadPoolExecutor.html
 
