@@ -207,6 +207,12 @@ amount of parallelism that we want to have.
 Memory profiling is also something that I'd want to do here specially since it relates to the number of threads and our
 in-memory visited store.
 
+##### More testing coverage
+
+I've added some unit tests but the coverage is not very high right now. On top of that, we need some integration testing
+of the whole system with some sample local files as well. Since we are using mockito in our unit tests, it might miss
+some cases.
+
 ##### More features
 
 Some examples of features that I'd like to add in the application:
@@ -214,7 +220,6 @@ Some examples of features that I'd like to add in the application:
 - Supporting more public APIs such as ability to stop the current crawling process going on.
 - More beautifully printed output
 
-##### Unit testing
 
 [1]: https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ThreadPoolExecutor.html
 

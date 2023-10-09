@@ -1,5 +1,6 @@
 package yashasvig.crawler.work;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.jsoup.Connection;
 import yashasvig.crawler.models.Page;
 import yashasvig.crawler.work.di.qualifier.WorkerPool;
@@ -12,7 +13,7 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,14 +29,14 @@ public class WorkCoordinator {
     private final Connection connection;
     private UrlFilter filter;
     private WorkCallback workCallback;
-    private final ThreadPoolExecutor workerPool;
+    private final ExecutorService workerPool;
     private final WorkTracker workTracker;
     private final Set<String> visitedUrls;
     private final AwaitingFinishThread awaitingFinishThread;
 
 
     @Inject
-    WorkCoordinator(WorkTracker workTracker, @WorkerPool ThreadPoolExecutor workerPool, Connection connection) {
+    WorkCoordinator(WorkTracker workTracker, @WorkerPool ExecutorService workerPool, Connection connection) {
         this.visitedUrls = Collections.newSetFromMap(new ConcurrentHashMap<>());
         this.workTracker = workTracker;
         this.workerPool = workerPool;
@@ -83,6 +84,11 @@ public class WorkCoordinator {
         }
     }
 
+    @VisibleForTesting
+    WorkCallback getWorkCallback() {
+        return workCallback;
+    }
+
     private class WorkCallbackDelegate implements WorkCallback {
         private final WorkCallback delegate;
 
@@ -92,8 +98,8 @@ public class WorkCoordinator {
 
         @Override
         public void onFinishedPageSuccessfully(Page page) {
-            System.out.printf("Total Queued: %s, Active threads: %s\n", workerPool.getTaskCount(),
-                    workerPool.getActiveCount());
+//            System.out.printf("Total Queued: %s, Active threads: %s\n", workerPool.,
+//                    workerPool.getActiveCount());
             page.getChildUrls().forEach(WorkCoordinator.this::scheduleUrlIfRequired);
             workTracker.finishedPage();
             delegate.onFinishedPageSuccessfully(page);

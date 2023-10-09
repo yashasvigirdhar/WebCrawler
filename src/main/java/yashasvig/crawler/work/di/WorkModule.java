@@ -9,6 +9,7 @@ import yashasvig.crawler.work.WorkTrackerImpl;
 import yashasvig.crawler.work.di.qualifier.WorkerPool;
 
 import javax.inject.Singleton;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -25,7 +26,7 @@ public class WorkModule {
     @Provides
     @WorkerPool
     @Singleton
-    static ThreadPoolExecutor provideWorkerPool() {
+    static ExecutorService provideWorkerPool() {
         ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(NUM_OF_WORKERS, NUM_OF_WORKERS, 2L,
                 TimeUnit.SECONDS,
                 new LinkedBlockingQueue<>());
