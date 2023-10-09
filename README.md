@@ -144,7 +144,7 @@ We currently support crawling only 1 domain at a time. The program exits when th
 
 ##### Input format
 
-Ab absolute url is expected as input, such as `https://monzo.com`.
+An absolute url is expected as input, such as `https://monzo.com`.
 
 > Note that the crawler only supports `HTTP` and `HTTPS` schemes for the starting URL. On top that, we further crawl
 > links only with
@@ -204,10 +204,17 @@ surface.
 We haven't really done a lot of performance benchmarking right now by tweaking some parameters in our code such as the
 amount of parallelism that we want to have.
 
-Memory profiling is also something that I'd want to do here specially since it relates to the number of threads and out
+Memory profiling is also something that I'd want to do here specially since it relates to the number of threads and our
 in-memory visited store.
 
-* Unit testing
+##### More features
+
+Some examples of features that I'd like to add in the application:
+
+- Supporting more public APIs such as ability to stop the current crawling process going on.
+- More beautifully printed output
+
+##### Unit testing
 
 [1]: https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ThreadPoolExecutor.html
 
