@@ -70,7 +70,7 @@ final class Worker implements Runnable {
 
             document = connection.get();
         } catch (IOException exception) {
-            logger.log(Level.INFO, exception.getLocalizedMessage(), exception);
+            logger.log(Level.INFO, exception.getLocalizedMessage());
             finishCallback.onError(url.toString(), exception.getLocalizedMessage());
             return;
         }
