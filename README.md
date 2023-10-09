@@ -14,16 +14,23 @@ Some important considerations while designing this system:
         - There could be a high volume of web pages even if we apply the domain restriction.
           But crawling one web page is independent of crawling another one. This naturally calls for
           a solution which can crawl multiple web pages in parallel.
+
+          One other reason to have parallelism in the system
+          is that a good amount of time of these threads would be spent in network-bound operations (waiting for the
+          pages to be downloaded). In that case, it makes to give access of the CPU to other threads.
+
         - For URLs which can not be crawled, in other words whose content type is not `text/html` such as `pdf`
           or `audio` files, we don't need to download the complete file to determine that. We can just use `HTTP HEAD`
-          method here.
+          method here. This could have huge advantage specially for websites that host a lot of static content.
+        - Pages could link to each other and there could be a cycle between them. Our program
+          should make sure we handle these cases and crawl a web page only once.
 
 <!-- TODO: Add memory and network --> 
 
 - **Correctness**
 
-    - Pages could link to each other and there could be a cycle between them. Our program
-      should make sure we handle these cases and crawl a web page only once.
+    - For small websites, we could ensure correctness by unit and manual tests. But for large websites which have
+      thousands of links, it'd be good to verify with an external scrapper that our program is scraping correctly.
 
 
 - **Extensibility**
@@ -31,6 +38,12 @@ Some important considerations while designing this system:
     - Currently, we just need to print the web page we are crawling with all the links on it.
       There could be further use cases where we'd want to do something different with those links.
       The design should be extensible enough to accommodate that.
+
+
+- **Testability**
+
+    - This is taken care by careful division of responsibility among different components (see below design) and making
+      sure there's no unnecessary coupling between them.
 
 ### Design
 
@@ -168,16 +181,32 @@ Page: https://monzo.com/legal/terms-and-conditions/
 
 As you can observe, the output also includes the errors that we faced while trying to crawl some pages.
 
-### Quality
-
-TBU
-
 ### Future work
 
-TBU
+##### Robustness
 
-* Robustness
-* Performance benchmarking
+Before shipping, the system can be made more robust in the following areas:
+
+1. Crash handling
+
+To make sure we don't crawl a web page twice, we currently maintain an in-memory set. So if the program crashes, we
+loose that information. When we restart the program, we just start from scratch. We could improve by reading our
+existing file information.
+
+2. Error Handling
+
+The program has not been rigorously tested with a lot of different kind of websites. I believe once we do that, we'd
+discover more error cases to handle. For the sake of limited time, I limited by scraped links to http(s) to reduce that
+surface.
+
+##### Performance benchmarking
+
+We haven't really done a lot of performance benchmarking right now by tweaking some parameters in our code such as the
+amount of parallelism that we want to have.
+
+Memory profiling is also something that I'd want to do here specially since it relates to the number of threads and out
+in-memory visited store.
+
 * Unit testing
 
 [1]: https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ThreadPoolExecutor.html
