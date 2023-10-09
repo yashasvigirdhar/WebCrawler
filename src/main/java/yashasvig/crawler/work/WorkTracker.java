@@ -1,29 +1,28 @@
 package yashasvig.crawler.work;
 
-import java.util.concurrent.Phaser;
-
 /**
- * Utility class to track the ongoing work.
+ * Utility class to track the completion status of ongoing work.
  * <p>
  * This class provides a way to register the ongoing work and wait for all the work to be completed for any
  * post-processing to be done.
  */
-final class WorkTracker {
-    private final Phaser phaser;
+public interface WorkTracker {
 
-    WorkTracker() {
-        phaser = new Phaser();
-    }
+    /**
+     * Waits for all the work to be completed in a blocking manner. This would wait only for the work that has been
+     * registered to this class.
+     *
+     * <p><b></p>This blocks the calling thread.</b></p>
+     */
+    void waitForFinish();
 
-    void waitForFinish() {
-        phaser.awaitAdvance(0);
-    }
+    /**
+     * Increments the number of work items that we need to wait before completion.
+     */
+    void trackNewPage();
 
-    void trackNewPage() {
-        phaser.register();
-    }
-
-    void finishedPage() {
-        phaser.arrive();
-    }
+    /**
+     * Decrements the number of work items that we need to wait before completion.
+     */
+    void finishedPage();
 }

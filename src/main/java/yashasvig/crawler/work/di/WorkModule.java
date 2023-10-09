@@ -4,6 +4,8 @@ import dagger.Module;
 import dagger.Provides;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
+import yashasvig.crawler.work.WorkTracker;
+import yashasvig.crawler.work.WorkTrackerImpl;
 import yashasvig.crawler.work.di.qualifier.WorkerPool;
 
 import javax.inject.Singleton;
@@ -32,7 +34,14 @@ public class WorkModule {
     }
 
     @Provides
+    @Singleton
     static Connection provideJsoupConnection() {
         return Jsoup.newSession().ignoreContentType(true).timeout(5000);
+    }
+
+    @Provides
+    @Singleton
+    static WorkTracker provideWorkTracker() {
+        return new WorkTrackerImpl();
     }
 }

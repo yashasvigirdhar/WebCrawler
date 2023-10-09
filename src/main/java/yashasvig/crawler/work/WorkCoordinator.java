@@ -37,9 +37,9 @@ public final class WorkCoordinator {
      */
     public WorkCoordinator(WorkCallback callback) {
         this.pageProcessingFinishCallback = new WorkCallbackDelegate(callback);
-        this.workTracker = new WorkTracker();
         this.visitedUrls = Collections.newSetFromMap(new ConcurrentHashMap<>());
         WorkComponent workComponent = DaggerWorkComponent.create();
+        this.workTracker = workComponent.workTracker();
         this.workerPool = workComponent.workerPool();
         this.connection = workComponent.jsoupConnection();
         awaitingFinishThread = new AwaitingFinishThread();
