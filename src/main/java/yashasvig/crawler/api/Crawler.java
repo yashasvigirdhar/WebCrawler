@@ -29,6 +29,8 @@ public final class Crawler {
      * Starts the crawling process.
      *
      * <p>The process happens asynchronously and this method returns shortly after scheduling it.</p>
+     *
+     * @param baseUrl the base url to start crawling
      */
     public void crawl(String baseUrl) throws URISyntaxException, MalformedURLException {
         crawlCentre.start(new URI(baseUrl).toURL());

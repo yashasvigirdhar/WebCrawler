@@ -108,8 +108,10 @@ This is our Public API surface which offers the simplest API to crawl a domain:
  * Starts the crawling process.
  *
  * <p>The process happens asynchronously and this method returns shortly after scheduling it.</p>
+ *
+ * @param baseUrl the base url to start crawling
  */
-void crawl();
+void crawl(String baseUrl);
 ```
 
 This is the only way external consumers can interact with the system.
