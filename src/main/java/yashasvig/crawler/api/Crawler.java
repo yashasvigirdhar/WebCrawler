@@ -3,7 +3,8 @@ package yashasvig.crawler.api;
 import yashasvig.crawler.centre.CrawlCentre;
 import yashasvig.crawler.global.Constants;
 
-import java.net.MalformedURLException;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -12,6 +13,7 @@ import java.net.URISyntaxException;
  *
  * <p>This is the only API that should be used by the external entities.</p>
  */
+@Singleton
 public final class Crawler {
 
     private final CrawlCentre crawlCentre;
@@ -22,8 +24,9 @@ public final class Crawler {
      * <p>Note that the output of the process would be stored in a text file in the same folder in which we are
      * running the application. The format of the output file would be: <base-url>-<timestamp>.txt</p>
      */
-    public Crawler() {
-        crawlCentre = new CrawlCentre();
+    @Inject
+    Crawler(CrawlCentre crawlCentre) {
+        this.crawlCentre = crawlCentre;
     }
 
     /**
@@ -37,7 +40,7 @@ public final class Crawler {
      * @param baseUrl the base url to start crawling
      * @throws IllegalArgumentException if the passed url is not supported
      */
-    public void crawl(String baseUrl) throws URISyntaxException, MalformedURLException {
+    public void crawl(String baseUrl) throws URISyntaxException {
         crawlCentre.start(new URI(baseUrl));
     }
 }

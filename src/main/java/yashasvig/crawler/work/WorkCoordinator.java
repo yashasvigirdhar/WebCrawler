@@ -2,9 +2,10 @@ package yashasvig.crawler.work;
 
 import org.jsoup.Connection;
 import yashasvig.crawler.models.Page;
-import yashasvig.crawler.work.di.DaggerWorkComponent;
-import yashasvig.crawler.work.di.WorkComponent;
+import yashasvig.crawler.work.di.qualifier.WorkerPool;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -19,30 +20,35 @@ import java.util.logging.Logger;
  * Provides API to schedule the crawling of a new {@link Page}. This class also provides way to be invoked when the
  * crawling finishes through {@link WorkCallback}.
  */
-public final class WorkCoordinator {
+@Singleton
+public class WorkCoordinator {
 
     private final Logger logger = Logger.getLogger(getClass().getSimpleName());
 
     private final Connection connection;
     private UrlFilter filter;
-    private final WorkCallback pageProcessingFinishCallback;
+    private WorkCallback pageProcessingFinishCallback;
     private final ThreadPoolExecutor workerPool;
     private final WorkTracker workTracker;
     private final Set<String> visitedUrls;
     private final AwaitingFinishThread awaitingFinishThread;
 
+
+    @Inject
+    WorkCoordinator(WorkTracker workTracker, @WorkerPool ThreadPoolExecutor workerPool, Connection connection) {
+        this.visitedUrls = Collections.newSetFromMap(new ConcurrentHashMap<>());
+        this.workTracker = workTracker;
+        this.workerPool = workerPool;
+        this.connection = connection;
+        awaitingFinishThread = new AwaitingFinishThread();
+    }
+
     /**
      * @param callback an instance of {@link WorkCallback} which would be invoked
      *                 after crawling for a page finishes
      */
-    public WorkCoordinator(WorkCallback callback) {
+    public void setCallback(WorkCallback callback) {
         this.pageProcessingFinishCallback = new WorkCallbackDelegate(callback);
-        this.visitedUrls = Collections.newSetFromMap(new ConcurrentHashMap<>());
-        WorkComponent workComponent = DaggerWorkComponent.create();
-        this.workTracker = workComponent.workTracker();
-        this.workerPool = workComponent.workerPool();
-        this.connection = workComponent.jsoupConnection();
-        awaitingFinishThread = new AwaitingFinishThread();
     }
 
     /**

@@ -81,7 +81,8 @@ application code, specially when designing a publisher-consumer system like this
 more pages to be crawled and consumers crawl one page at a time.
 
 Building upon this, we have a set of independent workers in our system which we call `WorkerPool`. The number of
-running workers are capped and range from 1 to max at any point based on the current requirement of the system.
+running workers are capped at a hardcoded number and are dynamically created and destroyed at any point based on the
+current requirement of the system.
 
 ##### Work Coordinator
 
@@ -100,7 +101,7 @@ injection** to provide the set of post processors in our system to the crawl cen
 - It's super convenient to add a new post processor. You just need to implement the existing interface and provide the
   implementation to the DI graph.
 
-We use **dagger2** framework for this. This gives us a couple of benefits:
+We use **dagger2** framework for this as compared to guice. This gives us a couple of benefits:
 
 - Performance benefit since the object graph is created at compile time instead of runtime.
 - No runtime object graph errors as we get to know them at compile time. So it makes development iteration faster.
@@ -146,9 +147,8 @@ We currently support crawling only 1 domain at a time. The program exits when th
 
 An absolute url is expected as input, such as `https://monzo.com`.
 
-> Note that the crawler only supports `HTTP` and `HTTPS` schemes for the starting URL. On top that, we further crawl
-> links only with
-> these two schemes.
+> Note that the crawler only supports `HTTP` and `HTTPS` schemes for the starting URL. On top of that, we further crawl
+> links only with these two schemes.
 
 ### Output
 

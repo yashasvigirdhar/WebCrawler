@@ -41,7 +41,7 @@ public class WorkModule {
 
     @Provides
     @Singleton
-    static WorkTracker provideWorkTracker() {
-        return new WorkTrackerImpl();
+    static WorkTracker provideWorkTracker(WorkTrackerImpl workTrackerImpl) {
+        return workTrackerImpl;
     }
 }

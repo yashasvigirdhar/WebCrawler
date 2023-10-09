@@ -1,5 +1,9 @@
 package yashasvig.crawler.work;
 
+import com.google.common.annotations.VisibleForTesting;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.concurrent.Phaser;
 
 /**
@@ -7,16 +11,21 @@ import java.util.concurrent.Phaser;
  * that allows us to dynamically change the no of parties that are taking part in the synchronization. Due to our
  * nature of work where we don't know beforehand how many pages we'd be crawling, this is super helpful to us. </p>
  */
+@Singleton
 public final class WorkTrackerImpl implements WorkTracker {
-    private final Phaser phaser;
 
-    public WorkTrackerImpl() {
+    @VisibleForTesting
+    final Phaser phaser;
+
+    @Inject
+    WorkTrackerImpl() {
         phaser = new Phaser();
     }
 
     @Override
     public void waitForFinish() {
         phaser.awaitAdvance(0);
+        phaser.forceTermination();
     }
 
     @Override
