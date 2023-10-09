@@ -5,19 +5,23 @@ import yashasvig.crawler.models.Page;
 import yashasvig.crawler.work.di.DaggerWorkComponent;
 import yashasvig.crawler.work.di.WorkComponent;
 
+import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Provides API to schedule the crawling of a new {@link Page}. This class also provides way to be invoked when the
  * crawling finishes through {@link WorkCallback}.
  */
 public final class WorkCoordinator {
+
+    private final Logger logger = Logger.getLogger(getClass().getSimpleName());
 
     private final Connection connection;
     private UrlFilter filter;
@@ -58,17 +62,18 @@ public final class WorkCoordinator {
         workTracker.trackNewPage();
         awaitingFinishThread.start();
 
-        try {
-            workerPool.submit(new Worker(connection.newRequest(), filter, pageProcessingFinishCallback, url.toURI()));
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
+        workerPool.submit(new Worker(connection.newRequest(), filter, pageProcessingFinishCallback, url));
     }
 
-    private void scheduleUrlIfRequired(URI url) {
-        if (visitedUrls.add(url.toString())) {
-            workTracker.trackNewPage();
-            workerPool.submit(new Worker(connection.newRequest(), filter, pageProcessingFinishCallback, url));
+    private void scheduleUrlIfRequired(URI uri) {
+        if (visitedUrls.add(uri.toString())) {
+            try {
+                URL url = uri.toURL();
+                workTracker.trackNewPage();
+                workerPool.submit(new Worker(connection.newRequest(), filter, pageProcessingFinishCallback, url));
+            } catch (MalformedURLException e) {
+                logger.log(Level.INFO, String.format("Can't schedule %s for crawling", uri), e);
+            }
         }
     }
 

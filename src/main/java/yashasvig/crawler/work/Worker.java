@@ -34,7 +34,7 @@ final class Worker implements Runnable {
     private final Connection session;
     private final UrlFilter filter;
     private final WorkCallback finishCallback;
-    private final URI url;
+    private final URL url;
 
     /**
      * Constructs a new worker instance.
@@ -45,7 +45,7 @@ final class Worker implements Runnable {
      * @param workCallback to be invoked when the processing for this page finishes
      * @param url          the page to be crawled by this worker
      */
-    Worker(Connection session, UrlFilter filter, WorkCallback workCallback, URI url) {
+    Worker(Connection session, UrlFilter filter, WorkCallback workCallback, URL url) {
         this.session = session;
         this.filter = filter;
         this.finishCallback = workCallback;
@@ -57,11 +57,9 @@ final class Worker implements Runnable {
         processPage(url);
     }
 
-    private void processPage(URI url) {
+    private void processPage(URL pageUrl) {
         Document document;
-        URL pageUrl;
         try {
-            pageUrl = url.toURL();
             Connection connection = session.url(pageUrl);
             Connection.Response response = connection.method(Connection.Method.HEAD).execute();
             if (!Objects.equals(response.contentType(), "text/html")) {
@@ -89,7 +87,7 @@ final class Worker implements Runnable {
                     continue;
                 }
 
-                URL url1 = uri.toURL();
+                URL ignored = uri.toURL();
                 childUrls.add(uri);
             } catch (MalformedURLException | URISyntaxException e) {
                 logger.log(Level.INFO, "Invalid url found " + link);

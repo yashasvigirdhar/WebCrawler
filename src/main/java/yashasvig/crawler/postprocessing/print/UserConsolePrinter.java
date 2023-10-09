@@ -5,7 +5,6 @@ import yashasvig.crawler.postprocessing.PostProcessor;
 
 import java.net.URL;
 import java.time.Duration;
-import java.time.Instant;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -26,7 +25,7 @@ public final class UserConsolePrinter implements PostProcessor {
         this.baseUrl = url;
         System.out.printf("""
                                         
-                ***Tighten your belts, we are starting to crawl %s***.
+                *** Tighten your belts, we are starting to crawl %s***.
                 Keep an eye on this console for some progress stats.
                                         
                 """, baseUrl);
