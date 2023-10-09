@@ -2,7 +2,7 @@ package yashasvig.crawler.postprocessing;
 
 import yashasvig.crawler.models.Page;
 
-import java.net.URL;
+import java.net.URI;
 import java.time.Duration;
 
 /**
@@ -17,9 +17,9 @@ public interface PostProcessor {
      * Invoked when the crawling of {@code url} starts
      *
      * <p>This is the first callback in the lifetime of crawling a particular domain and is usually followed by other
-     * callbacks, eventually ending at {@link #onFinishedCrawling(long, Duration)}.
+     * callbacks, eventually ending at {@link #onFinishedCrawling(Duration)}.
      */
-    void onCrawlingStarted(URL url);
+    void onCrawlingStarted(URI url);
 
     /**
      * Invoked when the crawling finished successfully for {@code Page}.
@@ -41,7 +41,7 @@ public interface PostProcessor {
      *
      * <p>This is the last in the series of callbacks invoked in the lifetime of crawling a particular domain.</p>
      *
-     * @param timeTaken
+     * @param timeTaken total time taken by the crawling process
      */
     void onFinishedCrawling(Duration timeTaken);
 

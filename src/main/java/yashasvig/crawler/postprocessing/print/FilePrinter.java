@@ -4,10 +4,9 @@ import yashasvig.crawler.models.Page;
 import yashasvig.crawler.postprocessing.PostProcessor;
 import yashasvig.crawler.util.IndentingPrintWriter;
 
-import javax.inject.Inject;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.net.URL;
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.Date;
@@ -26,7 +25,7 @@ public final class FilePrinter implements PostProcessor {
     }
 
     @Override
-    public void onCrawlingStarted(URL url) {
+    public void onCrawlingStarted(URI url) {
         initializeFileWriter(url);
     }
 
@@ -62,12 +61,12 @@ public final class FilePrinter implements PostProcessor {
         return "Printer";
     }
 
-    private void initializeFileWriter(URL url) {
+    private void initializeFileWriter(URI uri) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd MM yyyy HH:mm:ss");
         Date resultdate = new Date(System.currentTimeMillis());
         try {
             this.writer = new IndentingPrintWriter(
-                    new PrintWriter(url.getAuthority() + "-" + sdf.format(resultdate) + ".txt"));
+                    new PrintWriter(uri.getAuthority() + "-" + sdf.format(resultdate) + ".txt"));
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }

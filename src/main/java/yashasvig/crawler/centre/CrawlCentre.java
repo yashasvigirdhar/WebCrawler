@@ -1,6 +1,7 @@
 package yashasvig.crawler.centre;
 
 import dagger.Lazy;
+import yashasvig.crawler.centre.di.qualifiers.PostProcessingPool;
 import yashasvig.crawler.global.Constants;
 import yashasvig.crawler.models.Page;
 import yashasvig.crawler.postprocessing.PostProcessor;
@@ -14,9 +15,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Set;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ExecutorService;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,16 +30,15 @@ public class CrawlCentre {
     private final Logger logger = Logger.getLogger(getClass().getSimpleName());
 
     private final WorkCoordinator workCoordinator;
-    private final ThreadPoolExecutor postProcessingExecutor;
+    private final ExecutorService postProcessingExecutor;
     private final Lazy<Set<PostProcessor>> postProcessors;
     private Instant startTime;
 
     @Inject
-    CrawlCentre(Lazy<Set<PostProcessor>> postProcessors, WorkCoordinator workCoordinator) {
+    CrawlCentre(Lazy<Set<PostProcessor>> postProcessors, WorkCoordinator workCoordinator,
+                @PostProcessingPool ExecutorService postProcessingExecutor) {
         this.workCoordinator = workCoordinator;
-        this.postProcessingExecutor = new ThreadPoolExecutor(1, 1, 10L, TimeUnit.MILLISECONDS,
-                new LinkedBlockingQueue<>());
-        postProcessingExecutor.allowCoreThreadTimeOut(true);
+        this.postProcessingExecutor = postProcessingExecutor;
         this.postProcessors = postProcessors;
     }
 
@@ -65,7 +63,7 @@ public class CrawlCentre {
         postProcessingExecutor.submit(() -> {
             for (PostProcessor processor : postProcessors.get()) {
                 try {
-                    processor.onCrawlingStarted(baseUri.toURL());
+                    processor.onCrawlingStarted(baseUri);
                 } catch (Exception e) {
                     logger.log(Level.WARNING,
                             String.format("Couldn't invoke onCrawlingStarted on listener:%s", processor.getName()), e);

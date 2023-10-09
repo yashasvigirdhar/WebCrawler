@@ -27,7 +27,7 @@ public class WorkCoordinator {
 
     private final Connection connection;
     private UrlFilter filter;
-    private WorkCallback pageProcessingFinishCallback;
+    private WorkCallback workCallback;
     private final ThreadPoolExecutor workerPool;
     private final WorkTracker workTracker;
     private final Set<String> visitedUrls;
@@ -48,7 +48,7 @@ public class WorkCoordinator {
      *                 after crawling for a page finishes
      */
     public void setCallback(WorkCallback callback) {
-        this.pageProcessingFinishCallback = new WorkCallbackDelegate(callback);
+        this.workCallback = new WorkCallbackDelegate(callback);
     }
 
     /**
@@ -68,7 +68,7 @@ public class WorkCoordinator {
         workTracker.trackNewPage();
         awaitingFinishThread.start();
 
-        workerPool.submit(new Worker(connection.newRequest(), filter, pageProcessingFinishCallback, url));
+        workerPool.submit(new Worker(connection.newRequest(), filter, workCallback, url));
     }
 
     private void scheduleUrlIfRequired(URI uri) {
@@ -76,7 +76,7 @@ public class WorkCoordinator {
             try {
                 URL ignored = uri.toURL();
                 workTracker.trackNewPage();
-                workerPool.submit(new Worker(connection.newRequest(), filter, pageProcessingFinishCallback, uri));
+                workerPool.submit(new Worker(connection.newRequest(), filter, workCallback, uri));
             } catch (MalformedURLException e) {
                 logger.log(Level.INFO, String.format("Can't schedule %s for crawling", uri), e);
             }
@@ -115,7 +115,7 @@ public class WorkCoordinator {
         @Override
         public void run() {
             workTracker.waitForFinish();
-            pageProcessingFinishCallback.onFinishedCrawling();
+            workCallback.onFinishedCrawling();
         }
     }
 }
