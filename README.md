@@ -133,6 +133,29 @@ The output of each crawling process is stored in a file with naming structure as
 For example, when crawling monzo sometime past midnight hours, the
 output would be something like: `monzo.com-09 10 2023 02:41:40.txt`.
 
+The format of the output file would look like:
+
+```
+Page: https://monzo.com
+    Urls on this page:
+      https://monzo.com/money-worries/
+      https://monzo.com/legal/terms-and-conditions/
+      https://monzo.com/i/security/
+      ....
+      ....
+      
+Page: https://monzo.com/money-worries/
+    Urls on this page:
+      ....
+      
+Error: HTTP error fetching URL. Status=404, URL=[...]
+
+Page: https://monzo.com/legal/terms-and-conditions/
+    Urls on this page:
+```
+
+As you can observe, the output also includes the errors that we faced while trying to crawl some pages.
+
 ### Quality
 
 TBU
