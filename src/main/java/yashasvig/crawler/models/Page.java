@@ -45,6 +45,7 @@ public final class Page {
         writer.increaseIndent();
         if (childUrls.isEmpty()) {
             writer.println("No urls present on this page.");
+            writer.println();
         } else {
             writer.println("Urls on this page:");
             writer.increaseIndent();
