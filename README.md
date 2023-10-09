@@ -2,7 +2,7 @@
 
 Design a web crawler.
 
-Given a starting url, the program should crawl all the pages on that specific domain.
+Given a starting url, the program should crawl all the pages on that specific domain starting from that url.
 
 ## Considerations
 
@@ -124,6 +124,13 @@ Once a valid URL is
 entered, the program starts the crawling while printing some useful information on the console while it's going on.
 
 We currently support crawling only 1 domain at a time. The program exits when the crawling finishes.
+
+##### Input format
+
+Ab absolute url is expected as input, such as `https://monzo.com`.
+
+> Note that the crawler only supports `HTTP` and `HTTPS` schemes for the starting URL. On top that, we further crawl links only with
+these two schemes.
 
 ### Output
 

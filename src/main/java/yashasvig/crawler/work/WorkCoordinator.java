@@ -53,12 +53,12 @@ public final class WorkCoordinator {
      * <p>Note that the request would be picked up a shared pool of workers and is not guaranteed to be executed
      * immediately. This method returns immediately after submitting the request.</p>
      */
-    public void crawlDomain(URL url) {
+    public void crawlDomain(URI url) {
         if (awaitingFinishThread.isAlive()) {
             throw new IllegalArgumentException("Only 1 crawling allowed at a time");
         }
 
-        filter = new UrlFilter(url.toExternalForm());
+        filter = new UrlFilter(url.getAuthority());
         workTracker.trackNewPage();
         awaitingFinishThread.start();
 
@@ -68,9 +68,9 @@ public final class WorkCoordinator {
     private void scheduleUrlIfRequired(URI uri) {
         if (visitedUrls.add(uri.toString())) {
             try {
-                URL url = uri.toURL();
+                URL ignored = uri.toURL();
                 workTracker.trackNewPage();
-                workerPool.submit(new Worker(connection.newRequest(), filter, pageProcessingFinishCallback, url));
+                workerPool.submit(new Worker(connection.newRequest(), filter, pageProcessingFinishCallback, uri));
             } catch (MalformedURLException e) {
                 logger.log(Level.INFO, String.format("Can't schedule %s for crawling", uri), e);
             }
@@ -86,6 +86,8 @@ public final class WorkCoordinator {
 
         @Override
         public void onFinishedPageSuccessfully(Page page) {
+            System.out.printf("Total Queued: %s, Active threads: %s\n", workerPool.getTaskCount(),
+                    workerPool.getActiveCount());
             page.getChildUrls().forEach(WorkCoordinator.this::scheduleUrlIfRequired);
             workTracker.finishedPage();
             delegate.onFinishedPageSuccessfully(page);

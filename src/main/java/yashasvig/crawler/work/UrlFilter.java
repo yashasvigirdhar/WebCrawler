@@ -1,16 +1,24 @@
 package yashasvig.crawler.work;
 
-/**
- * Provides API to check if a particular url is a valid one for our program.
- */
-public final class UrlFilter {
-    private final String baseUrl;
+import java.net.URI;
 
-    UrlFilter(String baseUrl) {
-        this.baseUrl = baseUrl;
+/**
+ * Provides API to check if a particular {@link URI} is a valid one for our program to crawl.
+ */
+final class UrlFilter {
+    private final String authority;
+
+    /**
+     * @param authority the authority which should be used to filter out links for further crawling
+     */
+    UrlFilter(String authority) {
+        this.authority = authority;
     }
 
-    public boolean isValid(String url) {
-        return url.startsWith(baseUrl);
+    /**
+     * Returns true if we should try to crawl the passed {@code uri}.
+     */
+    public boolean isValid(URI uri) {
+        return uri.getAuthority().equals(authority) && uri.getFragment() == null;
     }
 }

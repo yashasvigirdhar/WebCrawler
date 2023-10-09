@@ -7,9 +7,10 @@ import yashasvig.crawler.postprocessing.di.DaggerPostProcessingComponent;
 import yashasvig.crawler.work.WorkCallback;
 import yashasvig.crawler.work.WorkCoordinator;
 
-import java.net.URL;
+import java.net.URI;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.Set;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -24,6 +25,7 @@ import java.util.logging.Logger;
 public final class CrawlCentre {
 
     private final Logger logger = Logger.getLogger(getClass().getSimpleName());
+    private static final String[] SUPPORTED_SCHEMES = {"HTTP", "HTTPS"};
 
     private final WorkCoordinator workCoordinator;
     private final ThreadPoolExecutor postProcessingExecutor;
@@ -44,22 +46,25 @@ public final class CrawlCentre {
      *
      * <p>The process happens asynchronously and this method returns shortly after scheduling it.</p>
      */
-    public void start(URL baseUrl) {
+    public void start(URI baseUrl) {
+        if (Arrays.stream(SUPPORTED_SCHEMES).noneMatch(s -> s.equalsIgnoreCase(baseUrl.getScheme()))) {
+            throw new IllegalArgumentException(
+                    String.format("Only %s schemes are supported currently", Arrays.toString(SUPPORTED_SCHEMES)));
+        }
+
         this.startTime = Instant.now();
         workCoordinator.crawlDomain(baseUrl);
         postProcessingExecutor.submit(() -> {
             for (PostProcessor processor : postProcessors.get()) {
                 try {
-                    processor.onCrawlingStarted(baseUrl);
+                    processor.onCrawlingStarted(baseUrl.toURL());
                 } catch (Exception e) {
                     logger.log(Level.WARNING,
-                            String.format("Couldn't invoke onCrawlingStarted on listener:%s",
-                                    processor.getName()), e);
+                            String.format("Couldn't invoke onCrawlingStarted on listener:%s", processor.getName()), e);
                 }
             }
         });
     }
-
 
     private class WorkCallbackImpl implements WorkCallback {
 
@@ -102,8 +107,8 @@ public final class CrawlCentre {
                         processor.onFinishedCrawling(timeTaken);
                     } catch (Exception e) {
                         logger.log(Level.WARNING,
-                                String.format("Couldn't invoke onFinishedCrawling on listener:%s",
-                                        processor.getName()), e);
+                                String.format("Couldn't invoke onFinishedCrawling on listener:%s", processor.getName()),
+                                e);
                     }
                 }
             });

@@ -30,9 +30,12 @@ public final class Crawler {
      *
      * <p>The process happens asynchronously and this method returns shortly after scheduling it.</p>
      *
+     * <p>Note that only HTTP or HTTPS scheme is supported by the crawler. </p>
+     *
      * @param baseUrl the base url to start crawling
+     * @throws IllegalArgumentException if the passed url is not supported
      */
     public void crawl(String baseUrl) throws URISyntaxException, MalformedURLException {
-        crawlCentre.start(new URI(baseUrl).toURL());
+        crawlCentre.start(new URI(baseUrl));
     }
 }

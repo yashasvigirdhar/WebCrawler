@@ -5,8 +5,8 @@ import com.google.errorprone.annotations.Immutable;
 import yashasvig.crawler.util.IndentingPrintWriter;
 
 import java.net.URI;
-import java.net.URL;
-import java.util.*;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * An Immutable representation of a web page in the system.
@@ -14,10 +14,10 @@ import java.util.*;
 @Immutable
 public final class Page {
 
-    private final URL url;
+    private final URI url;
     private final Set<URI> childUrls;   // we store URI in set since #equals and #hashcode for
 
-    public Page(URL url, Set<URI> childUrls) {
+    public Page(URI url, Set<URI> childUrls) {
         this.url = url;
         this.childUrls = childUrls;
     }
@@ -41,7 +41,7 @@ public final class Page {
 
     public void print(IndentingPrintWriter writer) {
         writer.increaseIndent();
-        writer.println("Page: " + url.toExternalForm());
+        writer.println("Page: " + url);
         writer.increaseIndent();
         if (childUrls.isEmpty()) {
             writer.println("No urls present on this page.");
