@@ -25,13 +25,18 @@ Some important considerations while designing this system:
         - Pages could link to each other and there could be a cycle between them. Our program
           should make sure we handle these cases and crawl a web page only once.
 
-<!-- TODO: Add memory and network --> 
-
 - **Correctness**
 
     - For small websites, we could ensure correctness by unit and manual tests. But for large websites which have
       thousands of links, it'd be good to verify with an external scrapper that our program is scraping correctly. We
-      could also setup an alert monitoring for the % of pages for which our system is reporting errors.
+      could also set up an alert monitoring for the % of pages for which our system is reporting errors.
+
+
+- **Testability**
+
+    - This is taken care by careful division of responsibility among different components (see below design) and making
+      sure there's no unnecessary coupling between them.
+    - Also, I've heavily incorporated dependency injection in my design to make it easy to cover code with unit tests.
 
 
 - **Extensibility**
@@ -41,11 +46,11 @@ Some important considerations while designing this system:
       The design should be extensible enough to accommodate that.
 
 
-- **Testability**
+- **Right abstraction levels**
 
-    - This is taken care by careful division of responsibility among different components (see below design) and making
-      sure there's no unnecessary coupling between them. 
-    - Also, I've heavily incorporated dependency injection in my design to make it easy to cover code with unit tests.
+    - An example of how this helps is if we want to switch to a different networking library in the future, it should
+      affect only the related modules and not the entire system. Current design with right responsibility division and
+      loose coupling ensures this.
 
 ### Design
 
