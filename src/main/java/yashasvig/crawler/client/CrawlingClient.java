@@ -9,11 +9,14 @@ import java.util.Scanner;
 
 /**
  * A placeholder client class so that we can inject our public api surface conveniently.
+ *
+ * <p>Note that this is not part of our crawling system but just a client example to showcase how our system can be
+ * used.</p>
  */
-public class CrawlingClient {
+public final class CrawlingClient {
 
     private static final int MAX_INPUT_ERROR_ALLOWED = 5;
-    private static int errorCount = 0;
+    private int errorCount = 0;
 
     @Inject
     Crawler crawler;

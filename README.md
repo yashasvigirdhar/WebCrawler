@@ -30,7 +30,8 @@ Some important considerations while designing this system:
 - **Correctness**
 
     - For small websites, we could ensure correctness by unit and manual tests. But for large websites which have
-      thousands of links, it'd be good to verify with an external scrapper that our program is scraping correctly.
+      thousands of links, it'd be good to verify with an external scrapper that our program is scraping correctly. We
+      could also setup an alert monitoring for the % of pages for which our system is reporting errors.
 
 
 - **Extensibility**
@@ -43,7 +44,8 @@ Some important considerations while designing this system:
 - **Testability**
 
     - This is taken care by careful division of responsibility among different components (see below design) and making
-      sure there's no unnecessary coupling between them.
+      sure there's no unnecessary coupling between them. 
+    - Also, I've heavily incorporated dependency injection in my design to make it easy to cover code with unit tests.
 
 ### Design
 
@@ -141,9 +143,9 @@ This is the only way external consumers can interact with the system.
 
 2. On top of #1, we filter URLs with fragments.
 
-3. Currently, we don't limit the depth of how many nested level we go. This could be changed in future iterations to handle
+3. Currently, we don't limit the depth of how many nested level we go. This could be changed in future iterations to
+   handle
    some websites. However, we do make sure that we crawl one page only once.
-
 
 ### Usage
 
@@ -160,7 +162,6 @@ We currently support crawling only 1 domain at a time. The program exits when th
 ##### Input format
 
 An absolute url is expected as input, such as `https://monzo.com`.
-
 
 ### Output
 
