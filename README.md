@@ -134,7 +134,21 @@ void crawl(String baseUrl);
 
 This is the only way external consumers can interact with the system.
 
+### Crawling Rules
+
+1. Note that the crawler only supports `HTTP` and `HTTPS` schemes for the starting URL. Same rule is applied when
+   crawling further nested pages.
+
+2. On top of #1, we filter URLs with fragments.
+
+3. Currently, we don't limit the depth of how many nested level we go. This could be changed in future iterations to handle
+   some websites. However, we do make sure that we crawl one page only once.
+
+
 ### Usage
+
+The project has been developed in IntelliJ Idea IDE. The easiest way to run is to just import it in the IDE and
+run `Main`.
 
 After we run the program, it asks the user to enter the starting base url on the command line.
 
@@ -147,8 +161,6 @@ We currently support crawling only 1 domain at a time. The program exits when th
 
 An absolute url is expected as input, such as `https://monzo.com`.
 
-> Note that the crawler only supports `HTTP` and `HTTPS` schemes for the starting URL. On top of that, we further crawl
-> links only with these two schemes.
 
 ### Output
 
@@ -219,7 +231,6 @@ Some examples of features that I'd like to add in the application:
 
 - Supporting more public APIs such as ability to stop the current crawling process going on.
 - More beautifully printed output
-
 
 [1]: https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ThreadPoolExecutor.html
 
