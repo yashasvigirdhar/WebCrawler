@@ -201,6 +201,16 @@ As you can observe, the output also includes the errors that we faced while tryi
 
 ### Future Work/Improvements
 
+##### More testing coverage
+
+_I've added some unit tests but the coverage is a bit low right now. This has been primary due to the time constraints
+for
+the assignment. I'd strongly prefer to increase it more than 90%._
+
+On top of that, we need some integration testing
+of the whole system with some sample local files as well. Since we are using mockito in our unit tests, we'd miss
+some cases with just unit tests.
+
 ##### Robustness
 
 Before shipping, the system can be made more robust in the following areas:
@@ -224,12 +234,6 @@ amount of parallelism that we want to have.
 
 Memory profiling is also something that I'd want to do here specially since it relates to the number of threads and our
 in-memory visited store.
-
-##### More testing coverage
-
-I've added some unit tests but the coverage is not very high right now. On top of that, we need some integration testing
-of the whole system with some sample local files as well. Since we are using mockito in our unit tests, it might miss
-some cases.
 
 ##### More features
 
